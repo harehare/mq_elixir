@@ -1,4 +1,4 @@
-# mq-elixir
+# mq_elixir
 
 Elixir bindings for [mq](https://mqlang.org/), a jq-like command-line tool for Markdown processing.
 
@@ -17,16 +17,11 @@ Add `mq` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:mq, "~> 0.5.9"}
+    {:mq_elixir, "~> 0.1.0"}
   ]
 end
 ```
 
-## Requirements
-
-- Elixir >= 1.14
-- Erlang/OTP >= 25
-- Rust >= 1.70 (for compilation)
 
 ## Usage
 
@@ -53,7 +48,7 @@ Enum.each(result, fn heading -> IO.puts(heading) end)
 
 ## Documentation
 
-Full documentation is available on [HexDocs](https://hexdocs.pm/mq).
+Full documentation is available on [HexDocs](https://hexdocs.pm/mq_elixir).
 
 For mq query language syntax, see the [official mq documentation](https://mqlang.org/).
 

@@ -6,7 +6,7 @@ defmodule Mq.MixProject do
 
   def project do
     [
-      app: :mq,
+      app: :mq_elixir,
       version: @version,
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
