@@ -3,7 +3,7 @@ authors = ["Takahiro Sato <harehare1110@gmail.com>"]
 description = "Elixir NIF bindings for mq Markdown processing"
 edition = "2024"
 license = "MIT"
-name = "mq-nif"
+name = "mq_nif"
 version = "0.5.9"
 
 [lib]

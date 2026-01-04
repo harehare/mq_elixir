@@ -122,10 +122,10 @@ defmodule MqTest do
 
   describe "Mq.Options" do
     test "to_map/1 converts struct to map" do
-      options = %Mq.Options{input_format: :markdown, list_style: :dash}
+      options = %Mq.Options{input_format: :markdown}
       map = Mq.Options.to_map(options)
 
-      assert map == %{input_format: :markdown, list_style: :dash}
+      assert map == %{input_format: :markdown}
     end
 
     test "to_map/1 removes nil values" do

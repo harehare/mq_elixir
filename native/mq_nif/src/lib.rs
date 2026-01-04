@@ -2,14 +2,16 @@ mod atoms;
 mod result;
 mod value;
 
+use std::collections::HashMap;
+
 use result::MqResult;
 use rustler::{Atom, Encoder, Env, Error, NifMap, Term};
-use std::collections::HashMap;
 use value::MqValue;
 
 /// Input format for mq queries
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 enum InputFormat {
+    #[default]
     Markdown,
     Mdx,
     Text,
@@ -21,7 +23,7 @@ enum InputFormat {
 /// Options for running mq queries
 #[derive(Debug, Clone, Copy, Default)]
 struct Options {
-    input_format: Option<Atom>,
+    input_format: InputFormat,
 }
 
 impl<'a> rustler::Decoder<'a> for Options {
@@ -29,16 +31,10 @@ impl<'a> rustler::Decoder<'a> for Options {
         let map: HashMap<Atom, Atom> = term.decode()?;
         let input_format = map.get(&atoms::input_format()).cloned();
 
-        Ok(Options { input_format })
+        Ok(Options {
+            input_format: parse_input_format(input_format),
+        })
     }
-}
-
-/// Options for HTML to Markdown conversion
-#[derive(Debug, Clone, Copy, NifMap, Default)]
-struct ConversionOptions {
-    extract_scripts_as_code_blocks: bool,
-    generate_front_matter: bool,
-    use_title_as_h1: bool,
 }
 
 fn parse_input_format(atom: Option<Atom>) -> InputFormat {
@@ -62,6 +58,14 @@ fn parse_input_format(atom: Option<Atom>) -> InputFormat {
     }
 }
 
+/// Options for HTML to Markdown conversion
+#[derive(Debug, Clone, Copy, NifMap, Default)]
+struct ConversionOptions {
+    extract_scripts_as_code_blocks: bool,
+    generate_front_matter: bool,
+    use_title_as_h1: bool,
+}
+
 /// Run an mq query on the provided content
 #[rustler::nif]
 fn run<'a>(
@@ -77,8 +81,7 @@ fn run<'a>(
     engine.load_builtin_module();
 
     // Parse input based on format
-    let input_format = parse_input_format(opts.input_format);
-    let input = match input_format {
+    let input = match opts.input_format {
         InputFormat::Markdown => mq_lang::parse_markdown_input(&content),
         InputFormat::Mdx => mq_lang::parse_mdx_input(&content),
         InputFormat::Text => mq_lang::parse_text_input(&content),

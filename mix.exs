@@ -10,11 +10,6 @@ defmodule Mq.MixProject do
       version: @version,
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
-      rustler_crates: [
-        mq_nif: [
-          path: "native/mq_nif"
-        ]
-      ],
       deps: deps(),
       description: description(),
       package: package(),
@@ -48,7 +43,7 @@ defmodule Mq.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:rustler, "~> 0.37.0", runtime: false},
+      {:rustler, "~> 0.37.0"},
       {:ex_doc, "~> 0.31", only: :dev, runtime: false},
       {:dialyxir, "~> 1.4", only: [:dev], runtime: false},
       {:excoveralls, "~> 0.18", only: :test},
@@ -71,7 +66,6 @@ defmodule Mq.MixProject do
       links: %{
         "GitHub" => @source_url,
         "Documentation" => "https://mqlang.org/",
-        "Changelog" => "#{@source_url}/blob/main/CHANGELOG.md"
       },
       maintainers: ["Takahiro Sato"]
     ]

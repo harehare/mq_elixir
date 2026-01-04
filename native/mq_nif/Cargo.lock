@@ -471,7 +471,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "mq-nif"
+name = "mq_nif"
 version = "0.5.9"
 dependencies = [
  "mq-lang",

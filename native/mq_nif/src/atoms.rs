@@ -1,4 +1,3 @@
-/// Atom definitions for Elixir interop
 rustler::atoms! {
     // Result atoms
     ok,
