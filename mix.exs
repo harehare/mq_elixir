@@ -61,11 +61,12 @@ defmodule Mq.MixProject do
   defp package do
     [
       name: "mq",
-      files: ~w(lib native/mq_nif/src native/mq_nif/Cargo.toml native/mq_nif/Cargo.lock .formatter.exs mix.exs README.md LICENSE CHANGELOG.md),
+      files:
+        ~w(lib native/mq_nif/src native/mq_nif/Cargo.toml native/mq_nif/Cargo.lock .formatter.exs mix.exs README.md LICENSE CHANGELOG.md),
       licenses: ["MIT"],
       links: %{
         "GitHub" => @source_url,
-        "Documentation" => "https://mqlang.org/",
+        "Documentation" => "https://mqlang.org/"
       },
       maintainers: ["Takahiro Sato"]
     ]

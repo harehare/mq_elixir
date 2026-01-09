@@ -33,7 +33,7 @@ defmodule Mq do
       {:ok, markdown} = Mq.html_to_markdown("<h1>Hello</h1>")
   """
 
-  alias Mq.{Native, Options, ConversionOptions, Result}
+  alias Mq.{ConversionOptions, Native, Options, Result}
 
   @doc """
   Run an mq query on the provided content.

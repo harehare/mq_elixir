@@ -2,7 +2,7 @@ defmodule Mq.Native do
   @moduledoc false
 
   use Rustler,
-    otp_app: :mq,
+    otp_app: :mq_elixir,
     crate: :mq_nif,
     path: "native/mq_nif"
 
@@ -12,4 +12,3 @@ defmodule Mq.Native do
   @doc false
   def html_to_markdown(_content, _options), do: :erlang.nif_error(:nif_not_loaded)
 end
-

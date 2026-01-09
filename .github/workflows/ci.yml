@@ -1,0 +1,109 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  MIX_ENV: test
+
+jobs:
+  test:
+    name: Test (Elixir ${{matrix.elixir}} / OTP ${{matrix.otp}})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        elixir: ['1.14', '1.15', '1.16', '1.17']
+        otp: ['25', '26', '27']
+        exclude:
+          # Elixir 1.14 doesn't support OTP 27
+          - elixir: '1.14'
+            otp: '27'
+          # Elixir 1.15 doesn't support OTP 27
+          - elixir: '1.15'
+            otp: '27'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v6
+    - name: Setup Rust
+      uses: actions-rust-lang/setup-rust-toolchain@v1
+      with:
+        toolchain: stable
+    - name: Setup Elixir
+      uses: erlef/setup-beam@v1
+      with:
+        elixir-version: ${{ matrix.elixir }}
+        otp-version: ${{ matrix.otp }}
+    - name: Restore dependencies cache
+      uses: actions/cache@v5
+      with:
+        path: |
+          deps
+          _build
+          native/mq_nif/target
+        key: ${{ runner.os }}-mix-otp${{ matrix.otp }}-elixir${{ matrix.elixir }}-${{ hashFiles('**/mix.lock') }}-${{ hashFiles('native/mq_nif/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-mix-otp${{ matrix.otp }}-elixir${{ matrix.elixir }}-
+    - name: Install dependencies
+      run: mix deps.get
+    - name: Compile
+      run: mix compile --warnings-as-errors
+    - name: Run tests
+      run: mix test
+
+  quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v6
+
+    - name: Setup Rust
+      uses: actions-rust-lang/setup-rust-toolchain@v1
+      with:
+        toolchain: stable
+
+    - name: Setup Elixir
+      uses: erlef/setup-beam@v1
+      with:
+        elixir-version: '1.17'
+        otp-version: '27'
+
+    - name: Restore dependencies cache
+      uses: actions/cache@v4
+      with:
+        path: |
+          deps
+          _build
+          native/mq_nif/target
+        key: ${{ runner.os }}-mix-quality-${{ hashFiles('**/mix.lock') }}-${{ hashFiles('native/mq_nif/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-mix-quality-
+
+    - name: Install dependencies
+      run: mix deps.get
+
+    - name: Check formatting
+      run: mix format --check-formatted
+
+    - name: Run Credo
+      run: mix credo --strict
+
+    - name: Restore PLT cache
+      uses: actions/cache@v4
+      id: plt-cache
+      with:
+        path: priv/plts
+        key: ${{ runner.os }}-plt-otp27-elixir1.17-${{ hashFiles('**/mix.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-plt-otp27-elixir1.17-
+
+    - name: Create PLTs directory
+      if: steps.plt-cache.outputs.cache-hit != 'true'
+      run: mkdir -p priv/plts
+
+    - name: Run Dialyzer
+      run: mix dialyzer
