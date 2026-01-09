@@ -14,11 +14,7 @@ defmodule Mq.MixProject do
       description: description(),
       package: package(),
       docs: docs(),
-      test_coverage: [tool: ExCoveralls],
-      dialyzer: [
-        plt_add_apps: [:ex_unit],
-        flags: [:unmatched_returns, :error_handling, :underspecs]
-      ]
+      test_coverage: [tool: ExCoveralls]
     ]
   end
 
@@ -45,7 +41,6 @@ defmodule Mq.MixProject do
     [
       {:rustler, "~> 0.37.0"},
       {:ex_doc, "~> 0.31", only: :dev, runtime: false},
-      {:dialyxir, "~> 1.4", only: [:dev], runtime: false},
       {:excoveralls, "~> 0.18", only: :test},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false}
