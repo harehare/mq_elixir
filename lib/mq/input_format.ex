@@ -17,7 +17,7 @@ defmodule Mq.InputFormat do
   @doc """
   List all available input formats.
   """
-  @spec all() :: [t()]
+  @spec all() :: [t(), ...]
   def all, do: [:markdown, :mdx, :html, :text, :raw, :null]
 
   @doc """
