@@ -89,8 +89,8 @@ defmodule Mq do
 
       iex> html_content = "<html><head><title>Title</title></head><body><h1>Content</h1></body></html>"
       iex> opts = %Mq.ConversionOptions{use_title_as_h1: true}
-      iex> {:ok, _markdown} = Mq.html_to_markdown(html_content, opts)
-      {:ok, _markdown}
+      iex> {:ok, markdown} = Mq.html_to_markdown(html_content, opts)
+      {:ok, markdown}
   """
   @spec html_to_markdown(String.t(), ConversionOptions.t() | nil) ::
           {:ok, String.t()} | {:error, String.t()}
