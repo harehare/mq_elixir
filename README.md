@@ -54,5 +54,4 @@ For mq query language syntax, see the [official mq documentation](https://mqlang
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) for details.
-
+MIT License
