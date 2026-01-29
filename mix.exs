@@ -56,7 +56,7 @@ defmodule Mq.MixProject do
 
   defp package do
     [
-      name: "mq",
+      name: "mq_elixir",
       files:
         ~w(lib native/mq_nif/src native/mq_nif/Cargo.toml native/mq_nif/Cargo.lock .formatter.exs mix.exs README.md LICENSE CHANGELOG.md),
       licenses: ["MIT"],
