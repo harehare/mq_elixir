@@ -77,4 +77,3 @@ defmodule Mq.MixProject do
     ]
   end
 end
-

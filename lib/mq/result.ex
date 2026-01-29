@@ -49,7 +49,9 @@ defimpl Enumerable, for: Mq.Result do
 
   def slice(%Mq.Result{values: values}) do
     size = Kernel.length(values)
-    {:ok, size, fn start, length, step -> values |> Enum.slice(start, length) |> Enum.take_every(step) end}
+
+    {:ok, size,
+     fn start, length, step -> values |> Enum.slice(start, length) |> Enum.take_every(step) end}
   end
 end
 
