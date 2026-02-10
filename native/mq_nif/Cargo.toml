@@ -4,15 +4,15 @@ description = "Elixir NIF bindings for mq Markdown processing"
 edition = "2024"
 license = "MIT"
 name = "mq_nif"
-version = "0.1.1"
+version = "0.1.2"
 
 [lib]
 crate-type = ["cdylib"]
 name = "mq_nif"
 
 [dependencies]
-mq-lang = {version = "0.5.13"}
-mq-markdown = {version = "0.5.13"}
+mq-lang = {version = "0.5.14"}
+mq-markdown = {version = "0.5.14"}
 rustler = "0.37.0"
 
 [profile.release]
