@@ -28,5 +28,6 @@ target
 
 .claude/settings.local.json
 
-
 .elixir_ls
+
+.DS_Store
