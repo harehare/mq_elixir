@@ -152,8 +152,6 @@ defmodule MqTest do
     end
   end
 
-  # ── Mq.Query ──────────────────────────────────────────────────────────────
-
   describe "Mq.Query selectors" do
     test "h1 through h6" do
       for n <- 1..6 do
@@ -554,8 +552,6 @@ defmodule MqTest do
       assert result.values == ["## Features", "## Installation"]
     end
   end
-
-  # ── Mq.Filter ─────────────────────────────────────────────────────────────
 
   describe "Mq.Filter" do
     test "string matching filters" do

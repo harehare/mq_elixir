@@ -30,7 +30,7 @@ defmodule Mq.Filter do
 
   defp new(expr), do: %__MODULE__{expr: expr}
 
-  # --- String matching ---
+  # String matching
 
   @doc "Match nodes whose text contains `text`."
   def contains(text), do: new("contains(#{qs(text)})")
@@ -44,7 +44,7 @@ defmodule Mq.Filter do
   @doc "Match nodes whose text matches the regex `pattern`."
   def test(pattern), do: new("test(#{qs(pattern)})")
 
-  # --- Regex ---
+  # Regex
 
   @doc "Match nodes whose text matches the regex `pattern`."
   def regex_match?(pattern), do: new("is_regex_match(#{qs(pattern)})")
@@ -52,7 +52,7 @@ defmodule Mq.Filter do
   @doc "Match nodes whose text does not match the regex `pattern`."
   def not_regex_match?(pattern), do: new("is_not_regex_match(#{qs(pattern)})")
 
-  # --- Comparison ---
+  # Comparison
 
   @doc "Match nodes equal to `value`."
   def eq(value), do: new("eq(#{qv(value)})")
@@ -72,7 +72,7 @@ defmodule Mq.Filter do
   @doc "Match nodes less than or equal to `value`."
   def lte(value), do: new("lte(#{qv(value)})")
 
-  # --- Type checks ---
+  # Type checks
 
   @doc "Match MDX nodes."
   def mdx?, do: new("is_mdx()")
@@ -86,7 +86,7 @@ defmodule Mq.Filter do
   @doc "Filter by the node type string."
   def type, do: new("type")
 
-  # --- Value transforms usable in filter context ---
+  # Value transforms usable in filter context
 
   @doc "The length of the current value."
   def length, do: new("length")
@@ -106,7 +106,7 @@ defmodule Mq.Filter do
   @doc "Add/concatenate the current value."
   def add, do: new("add")
 
-  # --- Boolean combinators ---
+  # Boolean combinators
 
   @doc """
   Combine two filters with boolean AND (`&&`).

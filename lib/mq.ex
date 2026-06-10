@@ -123,7 +123,7 @@ defmodule Mq do
     end
   end
 
-  # ── Query builder — delegated from Mq.Query ───────────────────────────────
+  # Query builder — delegated from Mq.Query
   #
   # All `Mq.Query` functions are available directly on `Mq`, so you can write:
   #
@@ -134,7 +134,7 @@ defmodule Mq do
   #
   # See `Mq.Query` for full documentation on each function.
 
-  # --- Heading selectors ---
+  # Heading selectors
   defdelegate h1(), to: Query
   defdelegate h2(), to: Query
   defdelegate h3(), to: Query
@@ -143,7 +143,7 @@ defmodule Mq do
   defdelegate h6(), to: Query
   defdelegate heading(), to: Query
 
-  # --- Block element selectors ---
+  # Block element selectors
   defdelegate code(), to: Query
   defdelegate paragraph(), to: Query
   defdelegate blockquote(), to: Query
@@ -163,7 +163,7 @@ defmodule Mq do
   defdelegate toml(), to: Query
   defdelegate yaml(), to: Query
 
-  # --- Inline element selectors ---
+  # Inline element selectors
   defdelegate code_inline(), to: Query
   defdelegate math_inline(), to: Query
   defdelegate link_ref(), to: Query
@@ -171,29 +171,29 @@ defmodule Mq do
   defdelegate footnote_ref(), to: Query
   defdelegate line_break(), to: Query
 
-  # --- Task list selectors ---
+  # Task list selectors
   defdelegate task(), to: Query
   defdelegate todo(), to: Query
   defdelegate done(), to: Query
 
-  # --- List / table selectors ---
+  # List / table selectors
   defdelegate list(), to: Query
   defdelegate list_at(n), to: Query
   defdelegate table_row(n), to: Query
   defdelegate table_col(n), to: Query
   defdelegate table_cell(r, c), to: Query
 
-  # --- MDX selectors ---
+  # MDX selectors
   defdelegate mdx_jsx_flow_element(), to: Query
   defdelegate mdx_text_expression(), to: Query
   defdelegate mdx_jsx_text_element(), to: Query
   defdelegate mdx_flow_expression(), to: Query
   defdelegate mdx_js_esm(), to: Query
 
-  # --- Recursive selector ---
+  # Recursive selector
   defdelegate recursive(), to: Query
 
-  # --- Standalone attribute selectors (0-arity) ---
+  # Standalone attribute selectors (0-arity)
   defdelegate value(), to: Query
   defdelegate node_values(), to: Query
   defdelegate lang(), to: Query
@@ -210,10 +210,10 @@ defmodule Mq do
   defdelegate align(), to: Query
   defdelegate property(key), to: Query
 
-  # --- Standalone select (no leading selector) ---
+  # Standalone select (no leading selector)
   defdelegate select(filter), to: Query
 
-  # --- Chain operations ---
+  # Chain operations
   defdelegate select(query, filter), to: Query
   defdelegate map(query, filter), to: Query
 
