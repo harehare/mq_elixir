@@ -52,8 +52,7 @@ defmodule Mq.Query do
   defp pipe_expr(%__MODULE__{expr: ""}, next), do: new(next)
   defp pipe_expr(%__MODULE__{expr: expr}, next), do: new("#{expr} | #{next}")
 
-  # ── Heading selectors ─────────────────────────────────────────────────────
-
+  # Heading selectors
   for n <- 1..6 do
     @doc "Select all h#{n} headings."
     def unquote(:"h#{n}")(), do: new(unquote(".h#{n}"))
@@ -62,8 +61,7 @@ defmodule Mq.Query do
   @doc "Select all headings (any level)."
   def heading, do: new(".heading")
 
-  # ── Block element selectors ───────────────────────────────────────────────
-
+  # Block element selectors
   @doc "Select all code blocks."
   def code, do: new(".code")
 
@@ -118,8 +116,7 @@ defmodule Mq.Query do
   @doc "Select all YAML front matter nodes."
   def yaml, do: new(".yaml")
 
-  # ── Inline element selectors ──────────────────────────────────────────────
-
+  # Inline element selectors
   @doc "Select all inline code spans."
   def code_inline, do: new(".code_inline")
 
@@ -138,8 +135,7 @@ defmodule Mq.Query do
   @doc "Select all line break nodes."
   def line_break, do: new(".break")
 
-  # ── Task list selectors ───────────────────────────────────────────────────
-
+  # Task list selectors
   @doc "Select all task list items."
   def task, do: new(".task")
 
@@ -149,8 +145,7 @@ defmodule Mq.Query do
   @doc "Select all checked task list items."
   def done, do: new(".done")
 
-  # ── List and table selectors ──────────────────────────────────────────────
-
+  # List and table selectors
   @doc "Select all list items."
   def list, do: new(".[]")
 
@@ -166,8 +161,7 @@ defmodule Mq.Query do
   @doc "Select the table cell at row `r`, column `c`."
   def table_cell(r, c), do: new(".[#{r}][#{c}]")
 
-  # ── MDX selectors ─────────────────────────────────────────────────────────
-
+  # MDX selectors
   @doc "Select all MDX JSX flow elements."
   def mdx_jsx_flow_element, do: new(".mdx_jsx_flow_element")
 
@@ -183,12 +177,11 @@ defmodule Mq.Query do
   @doc "Select all MDX JS/ESM import/export nodes."
   def mdx_js_esm, do: new(".mdx_js_esm")
 
-  # ── Recursive (deep) selector ─────────────────────────────────────────────
-
+  # Recursive (deep) selector
   @doc "Recursive / deep selector — descend into all children."
   def recursive, do: new("..")
 
-  # ── Standalone attribute selectors (0-arity) ──────────────────────────────
+  # Standalone attribute selectors (0-arity)
   # These also exist as 1-arity chain operations below.
 
   @doc "Standalone `.value` attribute selector."
@@ -236,8 +229,7 @@ defmodule Mq.Query do
   @doc "Standalone dict property selector: `.\"key\"`."
   def property(key), do: new(".\"#{key}\"")
 
-  # ── Standalone select (no leading selector) ───────────────────────────────
-
+  # Standalone select (no leading selector)
   @doc """
   Standalone `select(filter)` — no leading selector.
 
@@ -247,8 +239,7 @@ defmodule Mq.Query do
   def select(%Mq.Filter{expr: expr}), do: new("select(#{expr})")
   def select(filter) when is_binary(filter), do: new("select(#{filter})")
 
-  # ── Chained operations ────────────────────────────────────────────────────
-
+  # Chained operations
   @doc "Append a `select(filter)` step."
   def select(%__MODULE__{} = q, %Mq.Filter{expr: expr}), do: pipe_expr(q, "select(#{expr})")
 
@@ -259,8 +250,7 @@ defmodule Mq.Query do
   def map(%__MODULE__{} = q, %Mq.Filter{expr: expr}), do: pipe_expr(q, "map(#{expr})")
   def map(%__MODULE__{} = q, filter) when is_binary(filter), do: pipe_expr(q, "map(#{filter})")
 
-  # ── Output format conversions ─────────────────────────────────────────────
-
+  # Output format conversions
   @doc "Convert to plain text."
   def to_text(%__MODULE__{} = q), do: pipe_expr(q, "to_text()")
 
@@ -288,8 +278,7 @@ defmodule Mq.Query do
   @doc "Convert to a Markdown string (serialized)."
   def to_markdown_string(%__MODULE__{} = q), do: pipe_expr(q, "to_markdown_string()")
 
-  # ── Collection operations ─────────────────────────────────────────────────
-
+  # Collection operations
   @doc "Return the length of the current value."
   def length(%__MODULE__{} = q), do: pipe_expr(q, "length")
 
@@ -371,8 +360,7 @@ defmodule Mq.Query do
   @doc "Repeat the current value `n` times."
   def repeat(%__MODULE__{} = q, n), do: pipe_expr(q, "repeat(#{n})")
 
-  # ── String operations ─────────────────────────────────────────────────────
-
+  # String operations
   @doc "Trim leading and trailing whitespace."
   def trim(%__MODULE__{} = q), do: pipe_expr(q, "trim()")
 
@@ -420,8 +408,7 @@ defmodule Mq.Query do
   @doc "Capture groups from `pattern` (regex)."
   def capture(%__MODULE__{} = q, pattern), do: pipe_expr(q, "capture(#{inspect(pattern)})")
 
-  # ── Math operations ───────────────────────────────────────────────────────
-
+  # Math operations
   @doc "Absolute value."
   def abs(%__MODULE__{} = q), do: pipe_expr(q, "abs()")
 
@@ -464,8 +451,7 @@ defmodule Mq.Query do
   @doc "Return the larger of the current value and `other`."
   def max(%__MODULE__{} = q, other), do: pipe_expr(q, "max(#{other})")
 
-  # ── Type / logic ──────────────────────────────────────────────────────────
-
+  # Type / logic
   @doc "Return the type of the current value."
   def type(%__MODULE__{} = q), do: pipe_expr(q, "type")
 
@@ -475,8 +461,7 @@ defmodule Mq.Query do
   @doc "Return `default` when the current value is none/null."
   def coalesce(%__MODULE__{} = q, default), do: pipe_expr(q, "coalesce(#{inspect(default)})")
 
-  # ── Encoding ──────────────────────────────────────────────────────────────
-
+  # Encoding
   @doc "Base64-encode."
   def base64(%__MODULE__{} = q), do: pipe_expr(q, "base64()")
 
@@ -504,8 +489,7 @@ defmodule Mq.Query do
   @doc "Encode to hex."
   def to_hex(%__MODULE__{} = q), do: pipe_expr(q, "to_hex()")
 
-  # ── Path operations ───────────────────────────────────────────────────────
-
+  # Path operations
   @doc "Return the basename of a path."
   def basename(%__MODULE__{} = q), do: pipe_expr(q, "basename()")
 
@@ -521,16 +505,14 @@ defmodule Mq.Query do
   @doc "Join the current path with `other`."
   def path_join(%__MODULE__{} = q, other), do: pipe_expr(q, "path_join(#{inspect(other)})")
 
-  # ── Dict operations ───────────────────────────────────────────────────────
-
+  # Dict operations
   @doc "Get the value at dict key `key`."
   def get(%__MODULE__{} = q, key), do: pipe_expr(q, "get(#{inspect(key)})")
 
   @doc "Set dict key `key` to `val`."
   def set(%__MODULE__{} = q, key, val), do: pipe_expr(q, "set(#{inspect(key)}, #{inspect(val)})")
 
-  # ── Chained attribute selectors (1-arity, dual with standalone 0-arity) ───
-
+  # Chained attribute selectors (1-arity, dual with standalone 0-arity)
   @doc "Access the `.value` attribute of the selected node."
   def value(%__MODULE__{} = q), do: pipe_expr(q, ".value")
 
@@ -588,8 +570,7 @@ defmodule Mq.Query do
   @doc "Access a dict property by key (generates `.\"key\"`)."
   def property(%__MODULE__{} = q, key), do: pipe_expr(q, ".\"#{key}\"")
 
-  # ── Markdown attribute mutation ───────────────────────────────────────────
-
+  # Markdown attribute mutation
   @doc "Update the node content to `content`."
   def update(%__MODULE__{} = q, content), do: pipe_expr(q, "update(#{inspect(content)})")
 
@@ -619,8 +600,7 @@ defmodule Mq.Query do
   @doc "Set whether a list is ordered."
   def set_list_ordered(%__MODULE__{} = q, val), do: pipe_expr(q, "set_list_ordered(#{val})")
 
-  # ── Markdown construction ─────────────────────────────────────────────────
-
+  # Markdown construction
   @doc """
   Convert to a fenced code block.
 
@@ -710,8 +690,7 @@ defmodule Mq.Query do
   def to_md_table_cell(%__MODULE__{} = q, content, r, c),
     do: pipe_expr(q, "to_md_table_cell(#{inspect(content)}, #{r}, #{c})")
 
-  # ── Pipe two Query structs ────────────────────────────────────────────────
-
+  # Pipe two Query structs
   @doc """
   Pipe two queries together.
 
@@ -720,8 +699,7 @@ defmodule Mq.Query do
   """
   def pipe(%__MODULE__{} = q1, %__MODULE__{expr: expr2}), do: pipe_expr(q1, expr2)
 
-  # ── Conversion ────────────────────────────────────────────────────────────
-
+  # Conversion
   @doc "Return the raw mq query string."
   def to_query_string(%__MODULE__{expr: expr}), do: expr
 end
