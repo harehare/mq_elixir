@@ -251,7 +251,9 @@ defmodule Mq.Query do
 
   @doc "Append a `select(filter)` step."
   def select(%__MODULE__{} = q, %Mq.Filter{expr: expr}), do: pipe_expr(q, "select(#{expr})")
-  def select(%__MODULE__{} = q, filter) when is_binary(filter), do: pipe_expr(q, "select(#{filter})")
+
+  def select(%__MODULE__{} = q, filter) when is_binary(filter),
+    do: pipe_expr(q, "select(#{filter})")
 
   @doc "Append a `map(filter)` step."
   def map(%__MODULE__{} = q, %Mq.Filter{expr: expr}), do: pipe_expr(q, "map(#{expr})")
@@ -695,7 +697,8 @@ defmodule Mq.Query do
   def to_md_list(%__MODULE__{} = q, list_level), do: pipe_expr(q, "to_md_list(#{list_level})")
 
   @doc "Convert to a Markdown element with the given node `node_name`."
-  def to_md_name(%__MODULE__{} = q, node_name), do: pipe_expr(q, "to_md_name(#{inspect(node_name)})")
+  def to_md_name(%__MODULE__{} = q, node_name),
+    do: pipe_expr(q, "to_md_name(#{inspect(node_name)})")
 
   @doc "Build a table row from the given `cells` list."
   def to_md_table_row(%__MODULE__{} = q, cells) when is_list(cells) do

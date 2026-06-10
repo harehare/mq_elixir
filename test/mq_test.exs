@@ -262,7 +262,9 @@ defmodule MqTest do
       assert to_string(Query.text() |> Query.stringify()) == ".text | to_string()"
       assert to_string(Query.text() |> Query.to_number()) == ".text | to_number()"
       assert to_string(Query.text() |> Query.to_array()) == ".text | to_array()"
-      assert to_string(Query.text() |> Query.to_markdown_string()) == ".text | to_markdown_string()"
+
+      assert to_string(Query.text() |> Query.to_markdown_string()) ==
+               ".text | to_markdown_string()"
     end
 
     test "chained attribute selectors" do
@@ -282,6 +284,7 @@ defmodule MqTest do
       assert to_string(Query.table() |> Query.column()) == ".table | .column"
       assert to_string(Query.table() |> Query.row()) == ".table | .row"
       assert to_string(Query.table_align() |> Query.align()) == ".table_align | .align"
+
       assert to_string(Query.mdx_jsx_flow_element() |> Query.mdx_name()) ==
                ".mdx_jsx_flow_element | .name"
     end
@@ -300,8 +303,13 @@ defmodule MqTest do
       assert to_string(Query.text() |> Query.ascii_upcase()) == ".text | ascii_upcase()"
       assert to_string(Query.text() |> Query.len()) == ".text | len()"
       assert to_string(Query.text() |> Query.utf8bytelen()) == ".text | utf8bytelen()"
-      assert to_string(Query.text() |> Query.gsub("foo", "bar")) == ".text | gsub(\"foo\", \"bar\")"
-      assert to_string(Query.text() |> Query.replace("old", "new")) == ".text | replace(\"old\", \"new\")"
+
+      assert to_string(Query.text() |> Query.gsub("foo", "bar")) ==
+               ".text | gsub(\"foo\", \"bar\")"
+
+      assert to_string(Query.text() |> Query.replace("old", "new")) ==
+               ".text | replace(\"old\", \"new\")"
+
       assert to_string(Query.text() |> Query.split(",")) == ".text | split(\",\")"
       assert to_string(Query.text() |> Query.repeat(3)) == ".text | repeat(3)"
       assert to_string(Query.text() |> Query.slice(0, 5)) == ".text | slice(0, 5)"
@@ -348,7 +356,9 @@ defmodule MqTest do
     test "type/logic operations" do
       assert to_string(Query.text() |> Query.type()) == ".text | type"
       assert to_string(Query.text() |> Query.debug()) == ".text | debug"
-      assert to_string(Query.text() |> Query.coalesce("default")) == ".text | coalesce(\"default\")"
+
+      assert to_string(Query.text() |> Query.coalesce("default")) ==
+               ".text | coalesce(\"default\")"
     end
 
     test "encoding operations" do
@@ -365,7 +375,9 @@ defmodule MqTest do
       assert to_string(Query.text() |> Query.dirname()) == ".text | dirname()"
       assert to_string(Query.text() |> Query.extname()) == ".text | extname()"
       assert to_string(Query.text() |> Query.stem()) == ".text | stem()"
-      assert to_string(Query.text() |> Query.path_join("file.md")) == ".text | path_join(\"file.md\")"
+
+      assert to_string(Query.text() |> Query.path_join("file.md")) ==
+               ".text | path_join(\"file.md\")"
     end
 
     test "dict operations" do
@@ -376,13 +388,22 @@ defmodule MqTest do
     test "markdown mutation operations" do
       assert to_string(Query.h2() |> Query.update("New Title")) == ".h2 | update(\"New Title\")"
       assert to_string(Query.code() |> Query.attr("lang")) == ".code | attr(\"lang\")"
-      assert to_string(Query.code() |> Query.set_attr("lang", "ruby")) == ".code | set_attr(\"lang\", \"ruby\")"
+
+      assert to_string(Query.code() |> Query.set_attr("lang", "ruby")) ==
+               ".code | set_attr(\"lang\", \"ruby\")"
+
       assert to_string(Query.link() |> Query.get_title()) == ".link | get_title"
       assert to_string(Query.link() |> Query.get_url()) == ".link | get_url"
       assert to_string(Query.task() |> Query.set_check(true)) == ".task | set_check(true)"
-      assert to_string(Query.link_ref() |> Query.set_ref("myref")) == ".link_ref | set_ref(\"myref\")"
-      assert to_string(Query.code() |> Query.set_code_block_lang("ruby")) == ".code | set_code_block_lang(\"ruby\")"
-      assert to_string(Query.list() |> Query.set_list_ordered(true)) == ".[] | set_list_ordered(true)"
+
+      assert to_string(Query.link_ref() |> Query.set_ref("myref")) ==
+               ".link_ref | set_ref(\"myref\")"
+
+      assert to_string(Query.code() |> Query.set_code_block_lang("ruby")) ==
+               ".code | set_code_block_lang(\"ruby\")"
+
+      assert to_string(Query.list() |> Query.set_list_ordered(true)) ==
+               ".[] | set_list_ordered(true)"
     end
 
     test "markdown construction" do
@@ -397,9 +418,15 @@ defmodule MqTest do
       assert to_string(Query.text() |> Query.to_math_inline()) == ".text | to_math_inline()"
       assert to_string(Query.text() |> Query.to_md_text()) == ".text | to_md_text()"
       assert to_string(Query.text() |> Query.to_md_list(0)) == ".text | to_md_list(0)"
-      assert to_string(Query.text() |> Query.to_md_name("component")) == ".text | to_md_name(\"component\")"
-      assert to_string(Query.text() |> Query.to_md_table_row(["A", "B", "C"])) == ".text | to_md_table_row(\"A\", \"B\", \"C\")"
-      assert to_string(Query.text() |> Query.to_md_table_cell("content", 0, 1)) == ".text | to_md_table_cell(\"content\", 0, 1)"
+
+      assert to_string(Query.text() |> Query.to_md_name("component")) ==
+               ".text | to_md_name(\"component\")"
+
+      assert to_string(Query.text() |> Query.to_md_table_row(["A", "B", "C"])) ==
+               ".text | to_md_table_row(\"A\", \"B\", \"C\")"
+
+      assert to_string(Query.text() |> Query.to_md_table_cell("content", 0, 1)) ==
+               ".text | to_md_table_cell(\"content\", 0, 1)"
     end
 
     test "to_link arities" do
@@ -465,7 +492,10 @@ defmodule MqTest do
 
     test "filters with select via Query struct" do
       content = "# Main\n\n## Features\n\n## Installation"
-      assert {:ok, result} = Mq.run(Query.h2() |> Query.select(Filter.contains("Feature")), content)
+
+      assert {:ok, result} =
+               Mq.run(Query.h2() |> Query.select(Filter.contains("Feature")), content)
+
       assert result.values == ["## Features"]
     end
 
