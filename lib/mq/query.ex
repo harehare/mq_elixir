@@ -60,99 +60,99 @@ defmodule Mq.Query do
   end
 
   @doc "Select all headings (any level)."
-  def heading(), do: new(".heading")
+  def heading, do: new(".heading")
 
   # ── Block element selectors ───────────────────────────────────────────────
 
   @doc "Select all code blocks."
-  def code(), do: new(".code")
+  def code, do: new(".code")
 
   @doc "Select all paragraphs."
-  def paragraph(), do: new(".p")
+  def paragraph, do: new(".p")
 
   @doc "Select all blockquotes."
-  def blockquote(), do: new(".blockquote")
+  def blockquote, do: new(".blockquote")
 
   @doc "Select all horizontal rules."
-  def hr(), do: new(".hr")
+  def hr, do: new(".hr")
 
   @doc "Select all images."
-  def image(), do: new(".image")
+  def image, do: new(".image")
 
   @doc "Select all links."
-  def link(), do: new(".link")
+  def link, do: new(".link")
 
   @doc "Select all text nodes."
-  def text(), do: new(".text")
+  def text, do: new(".text")
 
   @doc "Select all strong (bold) nodes."
-  def strong(), do: new(".strong")
+  def strong, do: new(".strong")
 
   @doc "Select all emphasis (italic) nodes."
-  def emphasis(), do: new(".emphasis")
+  def emphasis, do: new(".emphasis")
 
   @doc "Select all strikethrough (delete) nodes."
-  def delete(), do: new(".delete")
+  def delete, do: new(".delete")
 
   @doc "Select all math blocks."
-  def math(), do: new(".math")
+  def math, do: new(".math")
 
   @doc "Select all tables."
-  def table(), do: new(".table")
+  def table, do: new(".table")
 
   @doc "Select all table alignment nodes."
-  def table_align(), do: new(".table_align")
+  def table_align, do: new(".table_align")
 
   @doc "Select all raw HTML nodes."
-  def html(), do: new(".html")
+  def html, do: new(".html")
 
   @doc "Select all link definition nodes."
-  def definition(), do: new(".definition")
+  def definition, do: new(".definition")
 
   @doc "Select all footnote definition nodes."
-  def footnote(), do: new(".footnote")
+  def footnote, do: new(".footnote")
 
   @doc "Select all TOML front matter nodes."
-  def toml(), do: new(".toml")
+  def toml, do: new(".toml")
 
   @doc "Select all YAML front matter nodes."
-  def yaml(), do: new(".yaml")
+  def yaml, do: new(".yaml")
 
   # ── Inline element selectors ──────────────────────────────────────────────
 
   @doc "Select all inline code spans."
-  def code_inline(), do: new(".code_inline")
+  def code_inline, do: new(".code_inline")
 
   @doc "Select all inline math spans."
-  def math_inline(), do: new(".math_inline")
+  def math_inline, do: new(".math_inline")
 
   @doc "Select all link reference nodes."
-  def link_ref(), do: new(".link_ref")
+  def link_ref, do: new(".link_ref")
 
   @doc "Select all image reference nodes."
-  def image_ref(), do: new(".image_ref")
+  def image_ref, do: new(".image_ref")
 
   @doc "Select all footnote reference nodes."
-  def footnote_ref(), do: new(".footnote_ref")
+  def footnote_ref, do: new(".footnote_ref")
 
   @doc "Select all line break nodes."
-  def line_break(), do: new(".break")
+  def line_break, do: new(".break")
 
   # ── Task list selectors ───────────────────────────────────────────────────
 
   @doc "Select all task list items."
-  def task(), do: new(".task")
+  def task, do: new(".task")
 
   @doc "Select all unchecked task list items."
-  def todo(), do: new(".todo")
+  def todo, do: new(".todo")
 
   @doc "Select all checked task list items."
-  def done(), do: new(".done")
+  def done, do: new(".done")
 
   # ── List and table selectors ──────────────────────────────────────────────
 
   @doc "Select all list items."
-  def list(), do: new(".[]")
+  def list, do: new(".[]")
 
   @doc "Select the list item at index `n`."
   def list_at(n), do: new(".[#{n}]")
@@ -169,69 +169,69 @@ defmodule Mq.Query do
   # ── MDX selectors ─────────────────────────────────────────────────────────
 
   @doc "Select all MDX JSX flow elements."
-  def mdx_jsx_flow_element(), do: new(".mdx_jsx_flow_element")
+  def mdx_jsx_flow_element, do: new(".mdx_jsx_flow_element")
 
   @doc "Select all MDX text expression nodes."
-  def mdx_text_expression(), do: new(".mdx_text_expression")
+  def mdx_text_expression, do: new(".mdx_text_expression")
 
   @doc "Select all MDX JSX text elements."
-  def mdx_jsx_text_element(), do: new(".mdx_jsx_text_element")
+  def mdx_jsx_text_element, do: new(".mdx_jsx_text_element")
 
   @doc "Select all MDX flow expression nodes."
-  def mdx_flow_expression(), do: new(".mdx_flow_expression")
+  def mdx_flow_expression, do: new(".mdx_flow_expression")
 
   @doc "Select all MDX JS/ESM import/export nodes."
-  def mdx_js_esm(), do: new(".mdx_js_esm")
+  def mdx_js_esm, do: new(".mdx_js_esm")
 
   # ── Recursive (deep) selector ─────────────────────────────────────────────
 
   @doc "Recursive / deep selector — descend into all children."
-  def recursive(), do: new("..")
+  def recursive, do: new("..")
 
   # ── Standalone attribute selectors (0-arity) ──────────────────────────────
   # These also exist as 1-arity chain operations below.
 
   @doc "Standalone `.value` attribute selector."
-  def value(), do: new(".value")
+  def value, do: new(".value")
 
   @doc "Standalone `.values` attribute selector."
-  def node_values(), do: new(".values")
+  def node_values, do: new(".values")
 
   @doc "Standalone `.lang` attribute selector."
-  def lang(), do: new(".lang")
+  def lang, do: new(".lang")
 
   @doc "Standalone `.meta` attribute selector."
-  def meta(), do: new(".meta")
+  def meta, do: new(".meta")
 
   @doc "Standalone `.fence` attribute selector."
-  def fence(), do: new(".fence")
+  def fence, do: new(".fence")
 
   @doc "Standalone `.url` attribute selector."
-  def url(), do: new(".url")
+  def url, do: new(".url")
 
   @doc "Standalone `.alt` attribute selector."
-  def alt(), do: new(".alt")
+  def alt, do: new(".alt")
 
   @doc "Standalone `.depth` attribute selector."
-  def depth(), do: new(".depth")
+  def depth, do: new(".depth")
 
   @doc "Standalone `.level` attribute selector."
-  def level(), do: new(".level")
+  def level, do: new(".level")
 
   @doc "Standalone `.ordered` attribute selector."
-  def ordered(), do: new(".ordered")
+  def ordered, do: new(".ordered")
 
   @doc "Standalone `.checked` attribute selector."
-  def checked(), do: new(".checked")
+  def checked, do: new(".checked")
 
   @doc "Standalone `.column` attribute selector."
-  def column(), do: new(".column")
+  def column, do: new(".column")
 
   @doc "Standalone `.row` attribute selector."
-  def row(), do: new(".row")
+  def row, do: new(".row")
 
   @doc "Standalone `.align` attribute selector."
-  def align(), do: new(".align")
+  def align, do: new(".align")
 
   @doc "Standalone dict property selector: `.\"key\"`."
   def property(key), do: new(".\"#{key}\"")
@@ -241,7 +241,7 @@ defmodule Mq.Query do
   @doc """
   Standalone `select(filter)` — no leading selector.
 
-      Query.select(Filter.is_mdx())
+      Query.select(Filter.mdx?())
       # => "select(is_mdx())"
   """
   def select(%Mq.Filter{expr: expr}), do: new("select(#{expr})")
@@ -453,7 +453,7 @@ defmodule Mq.Query do
   def negate(%__MODULE__{} = q), do: pipe_expr(q, "negate()")
 
   @doc "Check whether the current value is NaN."
-  def is_nan(%__MODULE__{} = q), do: pipe_expr(q, "is_nan()")
+  def nan?(%__MODULE__{} = q), do: pipe_expr(q, "is_nan()")
 
   @doc "Raise the current value to the power of `n`."
   def pow(%__MODULE__{} = q, n), do: pipe_expr(q, "pow(#{n})")

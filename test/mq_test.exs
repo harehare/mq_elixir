@@ -251,7 +251,7 @@ defmodule MqTest do
     end
 
     test "standalone select (no leading selector)" do
-      assert to_string(Query.select(Filter.is_mdx())) == "select(is_mdx())"
+      assert to_string(Query.select(Filter.mdx?())) == "select(is_mdx())"
     end
 
     test "output conversions" do
@@ -574,9 +574,9 @@ defmodule MqTest do
     end
 
     test "type check filters" do
-      assert to_string(Filter.is_mdx()) == "is_mdx()"
-      assert to_string(Filter.is_none()) == "is_none()"
-      assert to_string(Filter.is_nan()) == "is_nan()"
+      assert to_string(Filter.mdx?()) == "is_mdx()"
+      assert to_string(Filter.none?()) == "is_none()"
+      assert to_string(Filter.nan?()) == "is_nan()"
       assert to_string(Filter.type()) == "type"
     end
 

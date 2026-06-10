@@ -47,10 +47,10 @@ defmodule Mq.Filter do
   # --- Regex ---
 
   @doc "Match nodes whose text matches the regex `pattern`."
-  def is_regex_match(pattern), do: new("is_regex_match(#{qs(pattern)})")
+  def regex_match?(pattern), do: new("is_regex_match(#{qs(pattern)})")
 
   @doc "Match nodes whose text does not match the regex `pattern`."
-  def is_not_regex_match(pattern), do: new("is_not_regex_match(#{qs(pattern)})")
+  def not_regex_match?(pattern), do: new("is_not_regex_match(#{qs(pattern)})")
 
   # --- Comparison ---
 
@@ -75,36 +75,36 @@ defmodule Mq.Filter do
   # --- Type checks ---
 
   @doc "Match MDX nodes."
-  def is_mdx(), do: new("is_mdx()")
+  def mdx?, do: new("is_mdx()")
 
   @doc "Match nodes with no value (none/null)."
-  def is_none(), do: new("is_none()")
+  def none?, do: new("is_none()")
 
   @doc "Match nodes whose numeric value is NaN."
-  def is_nan(), do: new("is_nan()")
+  def nan?, do: new("is_nan()")
 
   @doc "Filter by the node type string."
-  def type(), do: new("type")
+  def type, do: new("type")
 
   # --- Value transforms usable in filter context ---
 
   @doc "The length of the current value."
-  def length(), do: new("length")
+  def length, do: new("length")
 
   @doc "Lowercase the current value (ASCII only)."
-  def ascii_downcase(), do: new("ascii_downcase()")
+  def ascii_downcase, do: new("ascii_downcase()")
 
   @doc "Uppercase the current value (ASCII only)."
-  def ascii_upcase(), do: new("ascii_upcase()")
+  def ascii_upcase, do: new("ascii_upcase()")
 
   @doc "Trim whitespace from the current value."
-  def trim(), do: new("trim()")
+  def trim, do: new("trim()")
 
   @doc "Match empty nodes."
-  def empty(), do: new("empty")
+  def empty, do: new("empty")
 
   @doc "Add/concatenate the current value."
-  def add(), do: new("add")
+  def add, do: new("add")
 
   # --- Boolean combinators ---
 

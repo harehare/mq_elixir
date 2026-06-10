@@ -285,7 +285,7 @@ defmodule Mq do
   defdelegate log10(query), to: Query
   defdelegate exp(query), to: Query
   defdelegate negate(query), to: Query
-  defdelegate is_nan(query), to: Query
+  defdelegate nan?(query), to: Query
   defdelegate pow(query, n), to: Query
   defdelegate min(query, other), to: Query
   defdelegate max(query, other), to: Query
