@@ -232,7 +232,7 @@ defmodule Mq do
   defdelegate length(query), to: Query
   defdelegate len(query), to: Query
   defdelegate utf8bytelen(query), to: Query
-  defdelegate add(query), to: Query
+  defdelegate add(query, other), to: Query
   defdelegate first(query), to: Query
   defdelegate last(query), to: Query
   defdelegate empty(query), to: Query
@@ -263,8 +263,6 @@ defmodule Mq do
   defdelegate rtrim(query), to: Query
   defdelegate downcase(query), to: Query
   defdelegate upcase(query), to: Query
-  defdelegate ascii_downcase(query), to: Query
-  defdelegate ascii_upcase(query), to: Query
   defdelegate explode(query), to: Query
   defdelegate implode(query), to: Query
   defdelegate url_encode(query), to: Query
