@@ -280,7 +280,7 @@ defmodule Mq.Query do
 
   # Collection operations
   @doc "Return the length of the current value."
-  def length(%__MODULE__{} = q), do: pipe_expr(q, "length")
+  def length(%__MODULE__{} = q), do: pipe_expr(q, "len()")
 
   @doc "Return the byte length of the current value."
   def len(%__MODULE__{} = q), do: pipe_expr(q, "len()")
@@ -288,8 +288,8 @@ defmodule Mq.Query do
   @doc "Return the UTF-8 byte length of the current value."
   def utf8bytelen(%__MODULE__{} = q), do: pipe_expr(q, "utf8bytelen()")
 
-  @doc "Add/concatenate the current value."
-  def add(%__MODULE__{} = q), do: pipe_expr(q, "add")
+  @doc "Add/concatenate `other` to the current value."
+  def add(%__MODULE__{} = q, other), do: pipe_expr(q, "add(#{inspect(other)})")
 
   @doc "Return the first element."
   def first(%__MODULE__{} = q), do: pipe_expr(q, "first")
@@ -297,8 +297,8 @@ defmodule Mq.Query do
   @doc "Return the last element."
   def last(%__MODULE__{} = q), do: pipe_expr(q, "last")
 
-  @doc "Emit nothing (empty result)."
-  def empty(%__MODULE__{} = q), do: pipe_expr(q, "empty")
+  @doc "Check whether the current value is empty."
+  def empty(%__MODULE__{} = q), do: pipe_expr(q, "is_empty()")
 
   @doc "Reverse the current value."
   def reverse(%__MODULE__{} = q), do: pipe_expr(q, "reverse")
@@ -334,10 +334,10 @@ defmodule Mq.Query do
   def join(%__MODULE__{} = q, sep), do: pipe_expr(q, "join(#{inspect(sep)})")
 
   @doc "Select the nth element (0-based)."
-  def nth(%__MODULE__{} = q, n), do: pipe_expr(q, "nth(#{n})")
+  def nth(%__MODULE__{} = q, n), do: pipe_expr(q, "get(#{n})")
 
   @doc "Limit output to `n` elements."
-  def limit(%__MODULE__{} = q, n), do: pipe_expr(q, "limit(#{n})")
+  def limit(%__MODULE__{} = q, n), do: pipe_expr(q, "take(#{n})")
 
   @doc "Take a range of `n` elements."
   def range(%__MODULE__{} = q, n), do: pipe_expr(q, "range(#{n})")
@@ -375,12 +375,6 @@ defmodule Mq.Query do
 
   @doc "Convert to uppercase (Unicode-aware)."
   def upcase(%__MODULE__{} = q), do: pipe_expr(q, "upcase()")
-
-  @doc "Convert to lowercase (ASCII only)."
-  def ascii_downcase(%__MODULE__{} = q), do: pipe_expr(q, "ascii_downcase()")
-
-  @doc "Convert to uppercase (ASCII only)."
-  def ascii_upcase(%__MODULE__{} = q), do: pipe_expr(q, "ascii_upcase()")
 
   @doc "Explode a string into codepoints."
   def explode(%__MODULE__{} = q), do: pipe_expr(q, "explode()")

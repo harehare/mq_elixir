@@ -297,8 +297,6 @@ defmodule MqTest do
       assert to_string(Query.text() |> Query.rtrim()) == ".text | rtrim()"
       assert to_string(Query.text() |> Query.downcase()) == ".text | downcase()"
       assert to_string(Query.text() |> Query.upcase()) == ".text | upcase()"
-      assert to_string(Query.text() |> Query.ascii_downcase()) == ".text | ascii_downcase()"
-      assert to_string(Query.text() |> Query.ascii_upcase()) == ".text | ascii_upcase()"
       assert to_string(Query.text() |> Query.len()) == ".text | len()"
       assert to_string(Query.text() |> Query.utf8bytelen()) == ".text | utf8bytelen()"
 
@@ -316,11 +314,11 @@ defmodule MqTest do
     end
 
     test "collection operations" do
-      assert to_string(Query.list() |> Query.length()) == ".[] | length"
-      assert to_string(Query.list() |> Query.add()) == ".[] | add"
+      assert to_string(Query.list() |> Query.length()) == ".[] | len()"
+      assert to_string(Query.list() |> Query.add("x")) == ".[] | add(\"x\")"
       assert to_string(Query.list() |> Query.first()) == ".[] | first"
       assert to_string(Query.list() |> Query.last()) == ".[] | last"
-      assert to_string(Query.list() |> Query.empty()) == ".[] | empty"
+      assert to_string(Query.list() |> Query.empty()) == ".[] | is_empty()"
       assert to_string(Query.list() |> Query.reverse()) == ".[] | reverse"
       assert to_string(Query.list() |> Query.sort()) == ".[] | sort"
       assert to_string(Query.list() |> Query.compact()) == ".[] | compact"
@@ -330,8 +328,8 @@ defmodule MqTest do
       assert to_string(Query.list() |> Query.values()) == ".[] | values"
       assert to_string(Query.list() |> Query.entries()) == ".[] | entries"
       assert to_string(Query.list() |> Query.children()) == ".[] | .children"
-      assert to_string(Query.h2() |> Query.nth(2)) == ".h2 | nth(2)"
-      assert to_string(Query.h2() |> Query.limit(5)) == ".h2 | limit(5)"
+      assert to_string(Query.h2() |> Query.nth(2)) == ".h2 | get(2)"
+      assert to_string(Query.h2() |> Query.limit(5)) == ".h2 | take(5)"
       assert to_string(Query.h2() |> Query.range(3)) == ".h2 | range(3)"
       assert to_string(Query.list() |> Query.join(", ")) == ".[] | join(\", \")"
       assert to_string(Query.list() |> Query.del("item")) == ".[] | del(\"item\")"

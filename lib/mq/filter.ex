@@ -89,22 +89,16 @@ defmodule Mq.Filter do
   # Value transforms usable in filter context
 
   @doc "The length of the current value."
-  def length, do: new("length")
-
-  @doc "Lowercase the current value (ASCII only)."
-  def ascii_downcase, do: new("ascii_downcase()")
-
-  @doc "Uppercase the current value (ASCII only)."
-  def ascii_upcase, do: new("ascii_upcase()")
+  def length, do: new("len()")
 
   @doc "Trim whitespace from the current value."
   def trim, do: new("trim()")
 
   @doc "Match empty nodes."
-  def empty, do: new("empty")
+  def empty, do: new("is_empty()")
 
-  @doc "Add/concatenate the current value."
-  def add, do: new("add")
+  @doc "Add/concatenate `other` to the current value."
+  def add(other), do: new("add(#{qv(other)})")
 
   # Boolean combinators
 
