@@ -263,6 +263,8 @@ defmodule MqTest do
 
       assert to_string(Query.text() |> Query.to_markdown_string()) ==
                ".text | to_markdown_string()"
+
+      assert to_string(Query.text() |> Query.to_boolean()) == ".text | to_boolean()"
     end
 
     test "chained attribute selectors" do
@@ -296,7 +298,9 @@ defmodule MqTest do
       assert to_string(Query.text() |> Query.ltrim()) == ".text | ltrim()"
       assert to_string(Query.text() |> Query.rtrim()) == ".text | rtrim()"
       assert to_string(Query.text() |> Query.downcase()) == ".text | downcase()"
+      assert to_string(Query.text() |> Query.ascii_downcase()) == ".text | ascii_downcase()"
       assert to_string(Query.text() |> Query.upcase()) == ".text | upcase()"
+      assert to_string(Query.text() |> Query.ascii_upcase()) == ".text | ascii_upcase()"
       assert to_string(Query.text() |> Query.len()) == ".text | len()"
       assert to_string(Query.text() |> Query.utf8bytelen()) == ".text | utf8bytelen()"
 
@@ -311,6 +315,12 @@ defmodule MqTest do
       assert to_string(Query.text() |> Query.slice(0, 5)) == ".text | slice(0, 5)"
       assert to_string(Query.text() |> Query.index("foo")) == ".text | index(\"foo\")"
       assert to_string(Query.text() |> Query.rindex("foo")) == ".text | rindex(\"foo\")"
+      assert to_string(Query.text() |> Query.url_decode()) == ".text | url_decode()"
+
+      assert to_string(Query.text() |> Query.capture("(?P<w>\\w+)")) ==
+               ".text | capture(\"(?P<w>\\\\w+)\")"
+
+      assert to_string(Query.text() |> Query.scan("\\w+")) == ".text | scan(\"\\\\w+\")"
     end
 
     test "collection operations" do
@@ -334,6 +344,44 @@ defmodule MqTest do
       assert to_string(Query.list() |> Query.join(", ")) == ".[] | join(\", \")"
       assert to_string(Query.list() |> Query.del("item")) == ".[] | del(\"item\")"
       assert to_string(Query.list() |> Query.insert(0, "new")) == ".[] | insert(0, \"new\")"
+    end
+
+    test "type-check filters (mq 0.6.4)" do
+      assert to_string(Query.list() |> Query.strings()) == ".[] | strings()"
+      assert to_string(Query.list() |> Query.dicts()) == ".[] | dicts()"
+      assert to_string(Query.list() |> Query.nones()) == ".[] | nones()"
+      assert to_string(Query.list() |> Query.bytes()) == ".[] | bytes()"
+      assert to_string(Query.list() |> Query.iterables()) == ".[] | iterables()"
+      assert to_string(Query.list() |> Query.scalars()) == ".[] | scalars()"
+    end
+
+    test "dict entry helpers (mq 0.6.4)" do
+      assert to_string(Query.text() |> Query.has("key")) == ".text | has(\"key\")"
+      assert to_string(Query.text() |> Query.from_entries()) == ".text | from_entries()"
+
+      assert to_string(Query.text() |> Query.with_entries("fn(e): e;")) ==
+               ".text | with_entries(fn(e): e;)"
+
+      assert to_string(Query.text() |> Query.with_entries(Filter.eq(1))) ==
+               ".text | with_entries(eq(1))"
+
+      assert to_string(Query.text() |> Query.walk("fn(x): upcase(x);")) ==
+               ".text | walk(fn(x): upcase(x);)"
+    end
+
+    test "random / uuid generation (mq 0.6.4)" do
+      assert to_string(Query.uuid()) == "uuid()"
+      assert to_string(Query.text() |> Query.uuid()) == ".text | uuid()"
+      assert to_string(Query.uuid_v4()) == "uuid_v4()"
+      assert to_string(Query.text() |> Query.uuid_v4()) == ".text | uuid_v4()"
+      assert to_string(Query.uuid_v7()) == "uuid_v7()"
+      assert to_string(Query.text() |> Query.uuid_v7()) == ".text | uuid_v7()"
+      assert to_string(Query.rand()) == "rand()"
+      assert to_string(Query.text() |> Query.rand()) == ".text | rand()"
+      assert to_string(Query.rand_int(1, 10)) == "rand_int(1, 10)"
+      assert to_string(Query.text() |> Query.rand_int(1, 10)) == ".text | rand_int(1, 10)"
+      assert to_string(Query.list() |> Query.shuffle()) == ".[] | shuffle()"
+      assert to_string(Query.list() |> Query.sample(2)) == ".[] | sample(2)"
     end
 
     test "math operations" do
@@ -548,6 +596,30 @@ defmodule MqTest do
       content = "# Main\n\n## Features\n\n## Installation"
       assert {:ok, result} = Mq.run(".h2", content)
       assert result.values == ["## Features", "## Installation"]
+    end
+
+    test "ascii_upcase transformation (mq 0.6.4)" do
+      md = "Hello world"
+      assert {:ok, result} = Mq.run(Query.text() |> Query.ascii_upcase(), md)
+      assert result.values == ["HELLO WORLD"]
+    end
+
+    test "url_decode transformation (mq 0.6.4)" do
+      md = "hello%20world"
+      assert {:ok, result} = Mq.run(Query.text() |> Query.url_decode(), md)
+      assert result.values == ["hello world"]
+    end
+
+    test "scan finds all regex matches (mq 0.6.4)" do
+      md = "Hello world"
+      assert {:ok, result} = Mq.run(Query.text() |> Query.scan("\\w+"), md)
+      assert result.values == ["Hello\nworld"]
+    end
+
+    test "standalone uuid generates a UUID string (mq 0.6.4)" do
+      assert {:ok, result} = Mq.run(Query.uuid(), "# x")
+      assert [uuid] = result.values
+      assert String.match?(uuid, ~r/^[0-9a-f-]{36}$/)
     end
   end
 

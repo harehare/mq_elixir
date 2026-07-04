@@ -227,6 +227,7 @@ defmodule Mq do
   defdelegate to_array(query), to: Query
   defdelegate to_bytes(query), to: Query
   defdelegate to_markdown_string(query), to: Query
+  defdelegate to_boolean(query), to: Query
 
   # Collection operations
   defdelegate length(query), to: Query
@@ -257,20 +258,38 @@ defmodule Mq do
   defdelegate insert(query, idx, val), to: Query
   defdelegate repeat(query, n), to: Query
 
+  # Type-check filters
+  defdelegate strings(query), to: Query
+  defdelegate dicts(query), to: Query
+  defdelegate nones(query), to: Query
+  defdelegate bytes(query), to: Query
+  defdelegate iterables(query), to: Query
+  defdelegate scalars(query), to: Query
+
+  # Dict entry helpers
+  defdelegate has(query, key), to: Query
+  defdelegate from_entries(query), to: Query
+  defdelegate with_entries(query, filter), to: Query
+  defdelegate walk(query, filter), to: Query
+
   # String operations
   defdelegate trim(query), to: Query
   defdelegate ltrim(query), to: Query
   defdelegate rtrim(query), to: Query
   defdelegate downcase(query), to: Query
+  defdelegate ascii_downcase(query), to: Query
   defdelegate upcase(query), to: Query
+  defdelegate ascii_upcase(query), to: Query
   defdelegate explode(query), to: Query
   defdelegate implode(query), to: Query
   defdelegate url_encode(query), to: Query
+  defdelegate url_decode(query), to: Query
   defdelegate intern(query), to: Query
   defdelegate gsub(query, pattern, replacement), to: Query
   defdelegate replace(query, from, to), to: Query
   defdelegate test(query, pattern), to: Query
   defdelegate capture(query, pattern), to: Query
+  defdelegate scan(query, pattern), to: Query
 
   # Math operations
   defdelegate abs(query), to: Query
@@ -303,6 +322,20 @@ defmodule Mq do
   defdelegate sha512(query), to: Query
   defdelegate from_hex(query), to: Query
   defdelegate to_hex(query), to: Query
+
+  # Random / UUID generation
+  defdelegate uuid(), to: Query
+  defdelegate uuid(query), to: Query
+  defdelegate uuid_v4(), to: Query
+  defdelegate uuid_v4(query), to: Query
+  defdelegate uuid_v7(), to: Query
+  defdelegate uuid_v7(query), to: Query
+  defdelegate rand(), to: Query
+  defdelegate rand(query), to: Query
+  defdelegate rand_int(min, max), to: Query
+  defdelegate rand_int(query, min, max), to: Query
+  defdelegate shuffle(query), to: Query
+  defdelegate sample(query, n), to: Query
 
   # Path operations
   defdelegate basename(query), to: Query

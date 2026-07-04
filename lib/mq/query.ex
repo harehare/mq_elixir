@@ -278,6 +278,9 @@ defmodule Mq.Query do
   @doc "Convert to a Markdown string (serialized)."
   def to_markdown_string(%__MODULE__{} = q), do: pipe_expr(q, "to_markdown_string()")
 
+  @doc "Convert to a boolean value."
+  def to_boolean(%__MODULE__{} = q), do: pipe_expr(q, "to_boolean()")
+
   # Collection operations
   @doc "Return the length of the current value."
   def length(%__MODULE__{} = q), do: pipe_expr(q, "len()")
@@ -360,6 +363,53 @@ defmodule Mq.Query do
   @doc "Repeat the current value `n` times."
   def repeat(%__MODULE__{} = q, n), do: pipe_expr(q, "repeat(#{n})")
 
+  @doc "Filter to string values (like `select(is_string(v))`)."
+  def strings(%__MODULE__{} = q), do: pipe_expr(q, "strings()")
+
+  @doc "Filter to dict values (like `select(is_dict(v))`)."
+  def dicts(%__MODULE__{} = q), do: pipe_expr(q, "dicts()")
+
+  @doc "Filter to none/null values."
+  def nones(%__MODULE__{} = q), do: pipe_expr(q, "nones()")
+
+  @doc "Filter to byte values."
+  def bytes(%__MODULE__{} = q), do: pipe_expr(q, "bytes()")
+
+  @doc "Filter to iterable values (arrays and dicts)."
+  def iterables(%__MODULE__{} = q), do: pipe_expr(q, "iterables()")
+
+  @doc "Filter to scalar (non-array, non-dict) values."
+  def scalars(%__MODULE__{} = q), do: pipe_expr(q, "scalars()")
+
+  @doc "Check whether a dict has `key`, or an array has an element at index `key`."
+  def has(%__MODULE__{} = q, key), do: pipe_expr(q, "has(#{inspect(key)})")
+
+  @doc "Build a dict from an array of `[key, value]` pairs, as produced by `entries/1`."
+  def from_entries(%__MODULE__{} = q), do: pipe_expr(q, "from_entries()")
+
+  @doc """
+  Transform each `[key, value]` pair of a dict with `filter`, then rebuild a dict
+  from the resulting pairs.
+
+  Accepts an `Mq.Filter` or a raw mq expression string, e.g. a `fn(entry): ...;`
+  lambda.
+  """
+  def with_entries(%__MODULE__{} = q, %Mq.Filter{expr: expr}),
+    do: pipe_expr(q, "with_entries(#{expr})")
+
+  def with_entries(%__MODULE__{} = q, filter) when is_binary(filter),
+    do: pipe_expr(q, "with_entries(#{filter})")
+
+  @doc """
+  Recursively walk a value (Markdown node, array, or dict), applying `filter` to
+  every leaf value and rebuilding the structure with the results.
+
+  Accepts an `Mq.Filter` or a raw mq expression string, e.g. a `fn(x): ...;`
+  lambda.
+  """
+  def walk(%__MODULE__{} = q, %Mq.Filter{expr: expr}), do: pipe_expr(q, "walk(#{expr})")
+  def walk(%__MODULE__{} = q, filter) when is_binary(filter), do: pipe_expr(q, "walk(#{filter})")
+
   # String operations
   @doc "Trim leading and trailing whitespace."
   def trim(%__MODULE__{} = q), do: pipe_expr(q, "trim()")
@@ -373,8 +423,14 @@ defmodule Mq.Query do
   @doc "Convert to lowercase (Unicode-aware)."
   def downcase(%__MODULE__{} = q), do: pipe_expr(q, "downcase()")
 
+  @doc "Convert ASCII uppercase letters (A-Z) to lowercase, leaving other characters unchanged."
+  def ascii_downcase(%__MODULE__{} = q), do: pipe_expr(q, "ascii_downcase()")
+
   @doc "Convert to uppercase (Unicode-aware)."
   def upcase(%__MODULE__{} = q), do: pipe_expr(q, "upcase()")
+
+  @doc "Convert ASCII lowercase letters (a-z) to uppercase, leaving other characters unchanged."
+  def ascii_upcase(%__MODULE__{} = q), do: pipe_expr(q, "ascii_upcase()")
 
   @doc "Explode a string into codepoints."
   def explode(%__MODULE__{} = q), do: pipe_expr(q, "explode()")
@@ -384,6 +440,9 @@ defmodule Mq.Query do
 
   @doc "URL-encode the current value."
   def url_encode(%__MODULE__{} = q), do: pipe_expr(q, "url_encode()")
+
+  @doc "URL-decode the current value."
+  def url_decode(%__MODULE__{} = q), do: pipe_expr(q, "url_decode()")
 
   @doc "Intern the current string."
   def intern(%__MODULE__{} = q), do: pipe_expr(q, "intern()")
@@ -401,6 +460,9 @@ defmodule Mq.Query do
 
   @doc "Capture groups from `pattern` (regex)."
   def capture(%__MODULE__{} = q, pattern), do: pipe_expr(q, "capture(#{inspect(pattern)})")
+
+  @doc "Find all matches of `pattern` (regex) in the current value."
+  def scan(%__MODULE__{} = q, pattern), do: pipe_expr(q, "scan(#{inspect(pattern)})")
 
   # Math operations
   @doc "Absolute value."
@@ -482,6 +544,43 @@ defmodule Mq.Query do
 
   @doc "Encode to hex."
   def to_hex(%__MODULE__{} = q), do: pipe_expr(q, "to_hex()")
+
+  # Random / UUID generation
+  @doc "Standalone: generate a random (version 4) UUID string."
+  def uuid, do: new("uuid()")
+
+  @doc "Chained: replace the current value with a random (version 4) UUID string."
+  def uuid(%__MODULE__{} = q), do: pipe_expr(q, "uuid()")
+
+  @doc "Standalone: generate a random (version 4) UUID string. Alias of `uuid/0`."
+  def uuid_v4, do: new("uuid_v4()")
+
+  @doc "Chained: replace the current value with a random (version 4) UUID string. Alias of `uuid/1`."
+  def uuid_v4(%__MODULE__{} = q), do: pipe_expr(q, "uuid_v4()")
+
+  @doc "Standalone: generate a time-ordered (version 7) UUID string."
+  def uuid_v7, do: new("uuid_v7()")
+
+  @doc "Chained: replace the current value with a time-ordered (version 7) UUID string."
+  def uuid_v7(%__MODULE__{} = q), do: pipe_expr(q, "uuid_v7()")
+
+  @doc "Standalone: generate a pseudo-random number in `[0, 1)`. Not cryptographically secure."
+  def rand, do: new("rand()")
+
+  @doc "Chained: replace the current value with a pseudo-random number in `[0, 1)`."
+  def rand(%__MODULE__{} = q), do: pipe_expr(q, "rand()")
+
+  @doc "Standalone: generate a pseudo-random integer in `[min, max]` (inclusive)."
+  def rand_int(min, max), do: new("rand_int(#{min}, #{max})")
+
+  @doc "Chained: replace the current value with a pseudo-random integer in `[min, max]` (inclusive)."
+  def rand_int(%__MODULE__{} = q, min, max), do: pipe_expr(q, "rand_int(#{min}, #{max})")
+
+  @doc "Shuffle the current array's elements into a uniformly random order."
+  def shuffle(%__MODULE__{} = q), do: pipe_expr(q, "shuffle()")
+
+  @doc "Sample `n` elements from the current array without replacement, in random order."
+  def sample(%__MODULE__{} = q, n), do: pipe_expr(q, "sample(#{n})")
 
   # Path operations
   @doc "Return the basename of a path."
