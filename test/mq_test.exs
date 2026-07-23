@@ -384,6 +384,62 @@ defmodule MqTest do
       assert to_string(Query.list() |> Query.sample(2)) == ".[] | sample(2)"
     end
 
+    test "collection helpers (mq 0.7.0)" do
+      assert to_string(Query.list() |> Query.tally()) == ".[] | tally()"
+
+      assert to_string(Query.list() |> Query.frequencies_by("fn(x): x;")) ==
+               ".[] | frequencies_by(fn(x): x;)"
+
+      assert to_string(Query.list() |> Query.frequencies_by(Filter.length())) ==
+               ".[] | frequencies_by(len())"
+    end
+
+    test "nested path helpers (mq 0.7.0)" do
+      assert to_string(Query.text() |> Query.get_path(["a", "b", 0])) ==
+               ".text | get_path([\"a\", \"b\", 0])"
+
+      assert to_string(Query.text() |> Query.set_path(["a", "b"], 1)) ==
+               ".text | set_path([\"a\", \"b\"], 1)"
+
+      assert to_string(Query.text() |> Query.paths()) == ".text | paths()"
+    end
+
+    test "string helpers (mq 0.7.0)" do
+      assert to_string(Query.text() |> Query.html_escape()) == ".text | html_escape()"
+      assert to_string(Query.text() |> Query.html_unescape()) == ".text | html_unescape()"
+      assert to_string(Query.text() |> Query.strip_tags()) == ".text | strip_tags()"
+      assert to_string(Query.text() |> Query.sanitize_html()) == ".text | sanitize_html()"
+      assert to_string(Query.text() |> Query.word_wrap(20)) == ".text | word_wrap(20)"
+
+      assert to_string(Query.text() |> Query.truncate(10, "...")) ==
+               ".text | truncate(10, \"...\")"
+
+      assert to_string(Query.text() |> Query.token_count()) == ".text | token_count()"
+    end
+
+    test "random_string generation (mq 0.7.0)" do
+      assert to_string(Query.random_string(8, "abc")) == "random_string(8, \"abc\")"
+
+      assert to_string(Query.text() |> Query.random_string(8, "abc")) ==
+               ".text | random_string(8, \"abc\")"
+    end
+
+    test "css extraction helpers (mq 0.7.0)" do
+      assert to_string(Query.text() |> Query.css("a")) == ".text | css(\"a\")"
+      assert to_string(Query.text() |> Query.css_text("a")) == ".text | css_text(\"a\")"
+
+      assert to_string(Query.text() |> Query.css_attr("a", "href")) ==
+               ".text | css_attr(\"a\", \"href\")"
+    end
+
+    test "glob_match (mq 0.7.0)" do
+      assert to_string(Query.glob_match("*.md", "file.md")) ==
+               "glob_match(\"*.md\", \"file.md\")"
+
+      assert to_string(Query.text() |> Query.glob_match("*.md", "file.md")) ==
+               ".text | glob_match(\"*.md\", \"file.md\")"
+    end
+
     test "math operations" do
       assert to_string(Query.text() |> Query.abs()) == ".text | abs()"
       assert to_string(Query.text() |> Query.ceil()) == ".text | ceil()"
@@ -620,6 +676,23 @@ defmodule MqTest do
       assert {:ok, result} = Mq.run(Query.uuid(), "# x")
       assert [uuid] = result.values
       assert String.match?(uuid, ~r/^[0-9a-f-]{36}$/)
+    end
+
+    test "word_wrap wraps text at the given width (mq 0.7.0)" do
+      md = "the quick brown fox"
+      assert {:ok, result} = Mq.run(Query.text() |> Query.word_wrap(10), md)
+      assert result.values == ["the quick\nbrown fox"]
+    end
+
+    test "truncate shortens text and appends the ellipsis (mq 0.7.0)" do
+      md = "hello world"
+      assert {:ok, result} = Mq.run(Query.text() |> Query.truncate(8, "..."), md)
+      assert result.values == ["hello..."]
+    end
+
+    test "standalone glob_match matches a path against a glob pattern (mq 0.7.0)" do
+      assert {:ok, result} = Mq.run(Query.glob_match("*.md", "file.md"), "# x")
+      assert result.values == ["true"]
     end
   end
 

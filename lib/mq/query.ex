@@ -52,6 +52,8 @@ defmodule Mq.Query do
   defp pipe_expr(%__MODULE__{expr: ""}, next), do: new(next)
   defp pipe_expr(%__MODULE__{expr: expr}, next), do: new("#{expr} | #{next}")
 
+  defp path_literal(path), do: "[" <> Enum.map_join(path, ", ", &inspect/1) <> "]"
+
   # Heading selectors
   for n <- 1..6 do
     @doc "Select all h#{n} headings."
@@ -363,6 +365,21 @@ defmodule Mq.Query do
   @doc "Repeat the current value `n` times."
   def repeat(%__MODULE__{} = q, n), do: pipe_expr(q, "repeat(#{n})")
 
+  @doc "Count occurrences of each element in the current array, returning a dict of `{value: count}`."
+  def tally(%__MODULE__{} = q), do: pipe_expr(q, "tally()")
+
+  @doc """
+  Count occurrences of each key extracted from the current array's elements by `filter`,
+  returning a dict of `{key: count}`.
+
+  Accepts an `Mq.Filter` or a raw mq expression string, e.g. a `fn(x): ...;` lambda.
+  """
+  def frequencies_by(%__MODULE__{} = q, %Mq.Filter{expr: expr}),
+    do: pipe_expr(q, "frequencies_by(#{expr})")
+
+  def frequencies_by(%__MODULE__{} = q, filter) when is_binary(filter),
+    do: pipe_expr(q, "frequencies_by(#{filter})")
+
   @doc "Filter to string values (like `select(is_string(v))`)."
   def strings(%__MODULE__{} = q), do: pipe_expr(q, "strings()")
 
@@ -409,6 +426,28 @@ defmodule Mq.Query do
   """
   def walk(%__MODULE__{} = q, %Mq.Filter{expr: expr}), do: pipe_expr(q, "walk(#{expr})")
   def walk(%__MODULE__{} = q, filter) when is_binary(filter), do: pipe_expr(q, "walk(#{filter})")
+
+  @doc """
+  Retrieve a nested value from the current dict/array by following `path`, an array of
+  keys/indices, e.g. `get_path(["a", "b", 0])`. Returns `nil` as soon as any intermediate
+  step is missing.
+  """
+  def get_path(%__MODULE__{} = q, path) when is_list(path),
+    do: pipe_expr(q, "get_path(#{path_literal(path)})")
+
+  @doc """
+  Set a nested value in the current dict/array by following `path` to `new_value`. Missing
+  intermediate dicts/arrays are created automatically.
+  """
+  def set_path(%__MODULE__{} = q, path, new_value) when is_list(path),
+    do: pipe_expr(q, "set_path(#{path_literal(path)}, #{inspect(new_value)})")
+
+  @doc """
+  Return an array of leaf-path arrays for the current dict/array value, e.g.
+  `{"a": {"b": 1}}` returns `[["a", "b"]]`. Each returned path can be passed to
+  `get_path/2`/`set_path/3`.
+  """
+  def paths(%__MODULE__{} = q), do: pipe_expr(q, "paths()")
 
   # String operations
   @doc "Trim leading and trailing whitespace."
@@ -463,6 +502,28 @@ defmodule Mq.Query do
 
   @doc "Find all matches of `pattern` (regex) in the current value."
   def scan(%__MODULE__{} = q, pattern), do: pipe_expr(q, "scan(#{inspect(pattern)})")
+
+  @doc "HTML-escape the current string (or Markdown node text)."
+  def html_escape(%__MODULE__{} = q), do: pipe_expr(q, "html_escape()")
+
+  @doc "HTML-unescape the current string (or Markdown node text)."
+  def html_unescape(%__MODULE__{} = q), do: pipe_expr(q, "html_unescape()")
+
+  @doc "Strip HTML tags from the current string (or Markdown node text), leaving plain text."
+  def strip_tags(%__MODULE__{} = q), do: pipe_expr(q, "strip_tags()")
+
+  @doc "Sanitize the current HTML string (or Markdown node text), removing dangerous tags/attributes."
+  def sanitize_html(%__MODULE__{} = q), do: pipe_expr(q, "sanitize_html()")
+
+  @doc "Word-wrap the current string (or Markdown node text) to `width` columns."
+  def word_wrap(%__MODULE__{} = q, width), do: pipe_expr(q, "word_wrap(#{width})")
+
+  @doc "Truncate the current string (or Markdown node text) to `len` characters, appending `ellipsis` when truncated."
+  def truncate(%__MODULE__{} = q, len, ellipsis),
+    do: pipe_expr(q, "truncate(#{len}, #{inspect(ellipsis)})")
+
+  @doc "Estimate the number of LLM tokens the current string (or Markdown node text) would consume."
+  def token_count(%__MODULE__{} = q), do: pipe_expr(q, "token_count()")
 
   # Math operations
   @doc "Absolute value."
@@ -582,6 +643,30 @@ defmodule Mq.Query do
   @doc "Sample `n` elements from the current array without replacement, in random order."
   def sample(%__MODULE__{} = q, n), do: pipe_expr(q, "sample(#{n})")
 
+  @doc "Standalone: generate a random string of `len` characters, each independently chosen (with replacement) from `charset`."
+  def random_string(len, charset), do: new("random_string(#{len}, #{inspect(charset)})")
+
+  @doc "Chained: replace the current value with a random string of `len` characters drawn from `charset`."
+  def random_string(%__MODULE__{} = q, len, charset),
+    do: pipe_expr(q, "random_string(#{len}, #{inspect(charset)})")
+
+  # HTML extraction (CSS selectors)
+  @doc """
+  Return the outer HTML of every element in the current HTML string matching CSS `selector`,
+  as an array of strings.
+  """
+  def css(%__MODULE__{} = q, selector), do: pipe_expr(q, "css(#{inspect(selector)})")
+
+  @doc "Return the text content of every element in the current HTML string matching CSS `selector`."
+  def css_text(%__MODULE__{} = q, selector), do: pipe_expr(q, "css_text(#{inspect(selector)})")
+
+  @doc """
+  Return the value of attribute `name` for every element in the current HTML string matching
+  CSS `selector` (`nil` in the array for elements without that attribute).
+  """
+  def css_attr(%__MODULE__{} = q, selector, name),
+    do: pipe_expr(q, "css_attr(#{inspect(selector)}, #{inspect(name)})")
+
   # Path operations
   @doc "Return the basename of a path."
   def basename(%__MODULE__{} = q), do: pipe_expr(q, "basename()")
@@ -597,6 +682,13 @@ defmodule Mq.Query do
 
   @doc "Join the current path with `other`."
   def path_join(%__MODULE__{} = q, other), do: pipe_expr(q, "path_join(#{inspect(other)})")
+
+  @doc "Standalone: check whether `path` matches the glob `pattern` (e.g. `*.md`, `docs/**/*.rs`)."
+  def glob_match(pattern, path), do: new("glob_match(#{inspect(pattern)}, #{inspect(path)})")
+
+  @doc "Chained: replace the current value with whether `path` matches the glob `pattern`."
+  def glob_match(%__MODULE__{} = q, pattern, path),
+    do: pipe_expr(q, "glob_match(#{inspect(pattern)}, #{inspect(path)})")
 
   # Dict operations
   @doc "Get the value at dict key `key`."
