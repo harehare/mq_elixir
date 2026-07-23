@@ -257,6 +257,8 @@ defmodule Mq do
   defdelegate del(query, value), to: Query
   defdelegate insert(query, idx, val), to: Query
   defdelegate repeat(query, n), to: Query
+  defdelegate tally(query), to: Query
+  defdelegate frequencies_by(query, filter), to: Query
 
   # Type-check filters
   defdelegate strings(query), to: Query
@@ -271,6 +273,9 @@ defmodule Mq do
   defdelegate from_entries(query), to: Query
   defdelegate with_entries(query, filter), to: Query
   defdelegate walk(query, filter), to: Query
+  defdelegate get_path(query, path), to: Query
+  defdelegate set_path(query, path, new_value), to: Query
+  defdelegate paths(query), to: Query
 
   # String operations
   defdelegate trim(query), to: Query
@@ -290,6 +295,13 @@ defmodule Mq do
   defdelegate test(query, pattern), to: Query
   defdelegate capture(query, pattern), to: Query
   defdelegate scan(query, pattern), to: Query
+  defdelegate html_escape(query), to: Query
+  defdelegate html_unescape(query), to: Query
+  defdelegate strip_tags(query), to: Query
+  defdelegate sanitize_html(query), to: Query
+  defdelegate word_wrap(query, width), to: Query
+  defdelegate truncate(query, len, ellipsis), to: Query
+  defdelegate token_count(query), to: Query
 
   # Math operations
   defdelegate abs(query), to: Query
@@ -336,6 +348,13 @@ defmodule Mq do
   defdelegate rand_int(query, min, max), to: Query
   defdelegate shuffle(query), to: Query
   defdelegate sample(query, n), to: Query
+  defdelegate random_string(len, charset), to: Query
+  defdelegate random_string(query, len, charset), to: Query
+
+  # HTML extraction (CSS selectors)
+  defdelegate css(query, selector), to: Query
+  defdelegate css_text(query, selector), to: Query
+  defdelegate css_attr(query, selector, name), to: Query
 
   # Path operations
   defdelegate basename(query), to: Query
@@ -343,6 +362,8 @@ defmodule Mq do
   defdelegate extname(query), to: Query
   defdelegate stem(query), to: Query
   defdelegate path_join(query, other), to: Query
+  defdelegate glob_match(pattern, path), to: Query
+  defdelegate glob_match(query, pattern, path), to: Query
 
   # Dict operations
   defdelegate get(query, key), to: Query
