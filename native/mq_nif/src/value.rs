@@ -52,11 +52,11 @@ impl From<mq_lang::RuntimeValue> for MqValue {
     fn from(value: mq_lang::RuntimeValue) -> Self {
         match value {
             mq_lang::RuntimeValue::Array(arr) => {
-                MqValue::Array(arr.into_iter().map(|v| v.into()).collect())
+                MqValue::Array(arr.iter().cloned().map(|v| v.into()).collect())
             }
             mq_lang::RuntimeValue::Dict(map) => MqValue::Dict(
-                map.into_iter()
-                    .map(|(k, v)| (k.as_str().to_string(), v.into()))
+                map.iter()
+                    .map(|(k, v)| (k.as_str().to_string(), v.clone().into()))
                     .collect(),
             ),
             mq_lang::RuntimeValue::Markdown(node, _) => MqValue::Markdown {
