@@ -78,7 +78,6 @@ impl From<mq_lang::RuntimeValue> for MqValue {
             mq_lang::RuntimeValue::Function(..)
             | mq_lang::RuntimeValue::NativeFunction(..)
             | mq_lang::RuntimeValue::Module(..)
-            | mq_lang::RuntimeValue::Ast(_)
             | mq_lang::RuntimeValue::None => MqValue::Markdown {
                 text: String::new(),
             },
