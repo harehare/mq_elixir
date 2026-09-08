@@ -62,7 +62,9 @@ impl From<mq_lang::RuntimeValue> for MqValue {
             mq_lang::RuntimeValue::Markdown(node, _) => MqValue::Markdown {
                 text: node.to_string(),
             },
-            mq_lang::RuntimeValue::String(s) => MqValue::Markdown { text: s },
+            mq_lang::RuntimeValue::String(s) => MqValue::Markdown {
+                text: s.to_string(),
+            },
             mq_lang::RuntimeValue::Symbol(sym) => MqValue::Markdown {
                 text: sym.as_str().to_string(),
             },
