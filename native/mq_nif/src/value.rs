@@ -77,10 +77,12 @@ impl From<mq_lang::RuntimeValue> for MqValue {
             mq_lang::RuntimeValue::Bytes(bytes) => MqValue::Markdown {
                 text: String::from_utf8_lossy(&bytes).to_string(),
             },
-            mq_lang::RuntimeValue::Function(..)
+            mq_lang::RuntimeValue::Closure(..)
             | mq_lang::RuntimeValue::NativeFunction(..)
-            | mq_lang::RuntimeValue::Module(..)
             | mq_lang::RuntimeValue::None => MqValue::Markdown {
+                text: String::new(),
+            },
+            _ => MqValue::Markdown {
                 text: String::new(),
             },
         }
