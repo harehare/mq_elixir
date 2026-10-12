@@ -56,7 +56,7 @@ impl From<mq_lang::RuntimeValue> for MqValue {
             }
             mq_lang::RuntimeValue::Dict(map) => MqValue::Dict(
                 map.iter()
-                    .map(|(k, v)| (k.as_str().to_string(), v.clone().into()))
+                    .map(|(k, v)| (k.to_string(), v.clone().into()))
                     .collect(),
             ),
             mq_lang::RuntimeValue::Markdown(node, _) => MqValue::Markdown {
@@ -66,7 +66,7 @@ impl From<mq_lang::RuntimeValue> for MqValue {
                 text: s.to_string(),
             },
             mq_lang::RuntimeValue::Symbol(sym) => MqValue::Markdown {
-                text: sym.as_str().to_string(),
+                text: sym.to_string(),
             },
             mq_lang::RuntimeValue::Number(n) => MqValue::Markdown {
                 text: n.to_string(),

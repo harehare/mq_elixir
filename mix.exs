@@ -1,7 +1,7 @@
 defmodule Mq.MixProject do
   use Mix.Project
 
-  @version "0.1.33"
+  @version "0.1.34"
   @source_url "https://github.com/harehare/mq_elixir"
 
   def project do
