@@ -26,7 +26,7 @@ jobs:
       with:
         toolchain: stable
     - name: Setup Elixir
-      uses: erlef/setup-beam@v1.24.0
+      uses: erlef/setup-beam@v1.24.1
       with:
         elixir-version: ${{ matrix.elixir }}
         otp-version: ${{ matrix.otp }}
@@ -48,7 +48,7 @@ jobs:
       with:
         toolchain: stable
     - name: Setup Elixir
-      uses: erlef/setup-beam@v1.24.0
+      uses: erlef/setup-beam@v1.24.1
       with:
         elixir-version: '1.17'
         otp-version: '27'
